@@ -3,6 +3,6 @@
 
 :mod:`client` Package
 ---------------------
-.. automodule:: browsermobproxy
+.. automodule:: browserupproxy
 .. autoclass:: Client
    :members:

@@ -13,7 +13,7 @@ def setup_module(module):
 
 class TestWebDriver(object):
     def setup_method(self, method):
-        from browsermobproxy.client import Client
+        from browserupproxy.client import Client
         self.client = Client("localhost:9090")
         self.driver = None
 
@@ -39,15 +39,15 @@ class TestWebDriver(object):
         self._run_url_rewrite_test()
 
     def test_what_things_look_like(self):
-        bmp_capabilities = copy.deepcopy(selenium.webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX)
-        self.client.add_to_capabilities(bmp_capabilities)
+        bup_capabilities = copy.deepcopy(selenium.webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX)
+        self.client.add_to_capabilities(bup_capabilities)
 
         proxy_capabilities = copy.deepcopy(selenium.webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX)
         proxy_addr = 'localhost:%d' % self.client.port
         proxy = Proxy({'httpProxy': proxy_addr,'sslProxy': proxy_addr})
         proxy.add_to_capabilities(proxy_capabilities)
 
-        assert bmp_capabilities == proxy_capabilities
+        assert bup_capabilities == proxy_capabilities
 
     def _create_webdriver(self, capabilites, proxy=None):
         chrome_binary = environ.get("CHROME_BIN", None)

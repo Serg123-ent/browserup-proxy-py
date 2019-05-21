@@ -3,6 +3,6 @@
 
 :mod:`server` Package
 ---------------------
-.. automodule:: browsermobproxy
+.. automodule:: browserupproxy
 .. autoclass:: Server
    :members:

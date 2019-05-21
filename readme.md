@@ -1,26 +1,41 @@
-browsermob-proxy-py
+browserup-proxy-py
 ===================
 
-Python client for the BrowserMob Proxy 2.0 REST API.
+Python client for the BrowserUp Proxy REST API.
 
 
+How to install
+----------------------------------
+
+1. `pip install git+https://github.com/browserup/browserup-proxy-py.git@master#egg=browserup-proxy==0.1.0`
+2. Use [bootstrap.sh](https://github.com/browserup/browserup-proxy-py/blob/master/bootstrap.sh) to download `browserup-proxy`, `selenium-server`, `chromedriver` and `geckodriver` (Firefox)
+3. Add `tools/chromedriver` and `tools/geckodriver` to OS `PATH`. Example:
+   ```
+   cd /usr/local/bin
+   ln -s ~/projects/browserup-proxy-py/tools/geckodriver geckodriver
+   ln -s ~/projects/browserup-proxy-py/tools/chromedriver chromedriver
+   ```
 
 How to use with selenium-webdriver
 ----------------------------------
 
+``` bash
+pip install selenium
+```
+
 Manually:
 
 ``` python 
-from browsermobproxy import Server
-server = Server("path/to/browsermob-proxy")
+from browserupproxy import Server
+from selenium import webdriver
+
+server = Server("tools/browserup-proxy-1.1.0/bin/browserup-proxy")
 server.start()
 proxy = server.create_proxy()
 
-from selenium import webdriver
 profile  = webdriver.FirefoxProfile()
 profile.set_proxy(proxy.selenium_proxy())
 driver = webdriver.Firefox(firefox_profile=profile)
-
 
 proxy.new_har("google")
 driver.get("http://www.google.co.uk")
@@ -42,22 +57,26 @@ browser = webdriver.Chrome(chrome_options = chrome_options)
 Running Tests
 -------------
 
-Install pytest if you don't have it already.
-
 ```bash
-$ pip install pytest
+git clone git@github.com:browserup/browserup-proxy-py.git
+cd browserup-proxy-py
+pyenv virtualenv 3.6.7 browserup-proxy-venv
+pyenv activate browserup-proxy-venv
+pip install -r requirements/base.txt
+pip install -r requirements/dev.txt
+./bootstrap.sh
 ```
 
-Start a browsermob instance.
+Start a browserup instance:
 
 ```bash
-$ java -jar browsermob.jar --port 9090
+./start-server.sh
 ```
 
 In a separate window:
 
 ```bash
-$ py.test
+py.test
 ```
 
 If you are going to watch the test, the 'human' ones should display an english
@@ -68,39 +87,5 @@ To run the tests in a CI environment, disable the ones that require human
 judgement by adding "-m "not human" test" to the py.test command.
 
 ```bash
-$ py.test -m "not human" test
+py.test -m "not human" test
 ```
-
-See also
---------
-
-* http://proxy.browsermob.com/
-* https://github.com/webmetrics/browsermob-proxy
-
-Note on Patches/Pull Requests
------------------------------
-
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Send me a pull request. Bonus points for topic branches.
-
-Copyright
----------
-
-Copyright 2011 David Burns 
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-

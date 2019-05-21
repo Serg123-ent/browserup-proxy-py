@@ -13,7 +13,7 @@ def setup_module(module):
 
 class TestRemote(object):
     def setup_method(self, method):
-        from browsermobproxy.client import Client
+        from browserupproxy.client import Client
         self.client = Client("localhost:9090")
         chrome_binary = environ.get("CHROME_BIN", None)
         self.desired_caps = selenium.webdriver.common.desired_capabilities.DesiredCapabilities.CHROME

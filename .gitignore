@@ -3,7 +3,13 @@
 *.pyc
 dist/
 build/
+venv/
+tools/
 *.egg-info/
 .cache/
-bmp.log
+.pytest_cache/
+bup.log
 .idea/
+.DS_Store
+geckodriver.log
+server.log

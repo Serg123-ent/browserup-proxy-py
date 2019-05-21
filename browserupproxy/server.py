@@ -39,9 +39,18 @@ class RemoteServer(object):
         :param dict params: Dictionary where you can specify params
             like httpProxy and httpsProxy
         """
-        params = params if params is not None else {}
-        client = Client(self.url[7:], params)
-        return client
+        attempts = 10
+        while True:
+            try:
+                params = params if params is not None else {}
+                client = Client(self.url[7:], params)
+                return client
+            except:
+                attempts = attempts - 1
+                if attempts > 0:
+                    time.sleep(1)
+                else:
+                    raise
 
     def _is_listening(self):
         try:
@@ -56,11 +65,11 @@ class RemoteServer(object):
 
 class Server(RemoteServer):
 
-    def __init__(self, path='browsermob-proxy', options=None):
+    def __init__(self, path='browserup-proxy', options=None):
         """
         Initialises a Server object
 
-        :param str path: Path to the browsermob proxy batch file
+        :param str path: Path to the browserup proxy batch file
         :param dict options: Dictionary that can hold the port.
             More items will be added in the future.
             This defaults to an empty dictionary
@@ -82,7 +91,7 @@ class Server(RemoteServer):
                 break
 
         if not os.path.isfile(path) and exec_not_on_path:
-            raise ProxyServerError("Browsermob-Proxy binary couldn't be found "
+            raise ProxyServerError("Browserup-Proxy binary couldn't be found "
                                    "in path provided: %s" % path)
 
         self.path = path
@@ -98,7 +107,7 @@ class Server(RemoteServer):
 
     def start(self, options=None):
         """
-        This will start the browsermob proxy and then wait until it can
+        This will start the browserup proxy and then wait until it can
         interact with it
 
         :param dict options: Dictionary that can hold the path and filename
@@ -122,7 +131,7 @@ class Server(RemoteServer):
         while not self._is_listening():
             if self.process.poll():
                 message = (
-                    "The Browsermob-Proxy server process failed to start. "
+                    "The Browserup-Proxy server process failed to start. "
                     "Check {0}"
                     "for a helpful error message.".format(self.log_file))
 
@@ -131,7 +140,7 @@ class Server(RemoteServer):
             count += 1
             if count == retry_count:
                 self.stop()
-                raise ProxyServerError("Can't connect to Browsermob-Proxy")
+                raise ProxyServerError("Can't connect to Browserup-Proxy")
 
     def _start_on_windows(self):
         return subprocess.Popen(self.command,
@@ -156,7 +165,10 @@ class Server(RemoteServer):
         try:
             self.process.kill()
             self.process.wait()
-            os.killpg(group_pid, signal.SIGINT)
+            try:
+                os.killpg(group_pid, signal.SIGINT)
+            except ProcessLookupError:
+                pass
         except AttributeError:
             # kill may not be available under windows environment
             pass

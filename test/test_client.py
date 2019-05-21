@@ -8,7 +8,7 @@ def setup_module(module):
 
 class TestClient(object):
     def setup_method(self, method):
-        from browsermobproxy.client import Client
+        from browserupproxy.client import Client
         self.client = Client("localhost:9090")
 
     def teardown_method(self, method):
@@ -262,11 +262,4 @@ class TestClient(object):
         /proxy/:port/rewrite
         """
         status_code = self.client.rewrite_url('http://www.facebook\.com', 'http://microsoft.com')
-        assert(status_code == 200)
-
-    def test_retry(self):
-        """
-        /proxy/:port/retry
-        """
-        status_code = self.client.retry(4)
         assert(status_code == 200)

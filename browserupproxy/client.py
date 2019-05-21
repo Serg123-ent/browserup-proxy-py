@@ -13,7 +13,7 @@ class Client(object):
         Initialises a new Client object
 
 
-        :param url: This is where the BrowserMob Proxy lives
+        :param url: This is where the BrowserUp Proxy lives
         :param params: URL query (for example httpProxy and httpsProxy vars)
         :param options: Dictionary that can contain the port of an existing
                         proxy to use (for example 'existing_proxy_port_to_use')
@@ -33,7 +33,7 @@ class Client(object):
             try:
                 jcontent = json.loads(content)
             except Exception as e:
-                raise Exception("Could not read Browsermob-Proxy json\n"
+                raise Exception("Could not read Browserup-Proxy json\n"
                                 "Another server running on this port?\n%s..." % content[:512])
             self.port = jcontent['port']
         url_parts = self.host.split(":")
@@ -68,7 +68,7 @@ class Client(object):
     def add_to_capabilities(self, capabilities):
         """
         Adds an 'proxy' entry to a desired capabilities dictionary with the
-        BrowserMob proxy information
+        BrowserUp proxy information
 
 
         :param capabilities: The Desired capabilities object from Selenium WebDriver
@@ -82,7 +82,7 @@ class Client(object):
     def add_to_webdriver_capabilities(self, capabilities):
         self.add_to_capabilities(capabilities)
 
-    # browsermob proxy api
+    # browserup proxy api
     @property
     def proxy_ports(self):
         """
@@ -108,7 +108,7 @@ class Client(object):
         This sets a new HAR to be recorded
 
         :param str ref: A reference for the HAR. Defaults to None
-        :param dict options: A dictionary that will be passed to BrowserMob
+        :param dict options: A dictionary that will be passed to BrowserUp
             Proxy with specific keywords. Keywords are:
 
                 - captureHeaders: Boolean, capture headers
@@ -200,8 +200,8 @@ class Client(object):
         """
         Executes the java/js code against each response
         `HttpRequest request <https://netty.io/4.1/api/io/netty/handler/codec/http/HttpRequest.html>`_,
-        `HttpMessageContents contents <https://raw.githubusercontent.com/lightbody/browsermob-proxy/master/browsermob-core/src/main/java/net/lightbody/bmp/util/HttpMessageContents.java>`_,
-        `HttpMessageInfo messageInfo <https://raw.githubusercontent.com/lightbody/browsermob-proxy/master/browsermob-core/src/main/java/net/lightbody/bmp/util/HttpMessageInfo.java>`_
+        `HttpMessageContents contents <https://raw.githubusercontent.com/browserup/browserup-proxy/master/browserup-proxy-core/src/main/java/com/browserup/bup/util/HttpMessageContents.java>`_,
+        `HttpMessageInfo messageInfo <https://raw.githubusercontent.com/browserup/browserup-proxy/master/browserup-proxy-core/src/main/java/com/browserup/bup/util/HttpMessageInfo.java>`_
         are available objects to interact with.
         :param str js: the js/java code to execute
         """
@@ -214,8 +214,8 @@ class Client(object):
         """
         Executes the java/js code against each response
         `HttpRequest request <https://netty.io/4.1/api/io/netty/handler/codec/http/HttpRequest.html>`_,
-        `HttpMessageContents contents <https://raw.githubusercontent.com/lightbody/browsermob-proxy/master/browsermob-core/src/main/java/net/lightbody/bmp/util/HttpMessageContents.java>`_,
-        `HttpMessageInfo messageInfo <https://raw.githubusercontent.com/lightbody/browsermob-proxy/master/browsermob-core/src/main/java/net/lightbody/bmp/util/HttpMessageInfo.java>`_
+        `HttpMessageContents contents <https://raw.githubusercontent.com/browserup/browserup-proxy/master/browserup-proxy-core/src/main/java/com/browserup/bup/util/HttpMessageContents.java>`_,
+        `HttpMessageInfo messageInfo <https://raw.githubusercontent.com/browserup/browserup-proxy/master/browserup-proxy-core/src/main/java/com/browserup/bup/util/HttpMessageInfo.java>`_
         are available objects to interact with.
         :param str js: the js/java code to execute
         """
@@ -293,7 +293,7 @@ class Client(object):
         :param str address: url that you wish to remap
         :param str ip_address: IP Address that will handle all traffic for
             the address passed in
-        :param **hostmap: Other hosts to be added as keyword arguments
+        :param hostmap: Other hosts to be added as keyword arguments
         """
         hostmap = hostmap if hostmap is not None else {}
         if (address is not None and ip_address is not None):
@@ -346,14 +346,4 @@ class Client(object):
         """
 
         r = requests.delete('%s/proxy/%s/rewrite' % (self.host, self.port))
-        return r.status_code
-
-    def retry(self, retry_count):
-        """
-        Retries. No idea what its used for, but its in the API...
-
-        :param int retry_count: the number of retries
-        """
-        r = requests.put('%s/proxy/%s/retry' % (self.host, self.port),
-                         {'retrycount': retry_count})
         return r.status_code
